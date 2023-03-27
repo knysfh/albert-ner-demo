@@ -1,0 +1,3 @@
+tensorflow==2.11.0
+git+https://github.com/knysfh/bert-for-tf2.git
+pyahocorasick==2.0.0

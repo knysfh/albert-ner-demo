@@ -1,0 +1,38 @@
+数据描述
+
+本次数据主要来自金融领域的公开新闻报道，训练集、验证集、测试集说明如下：
+训练集&验证集
+
+在训练数据和验证数据发布阶段，我们会发布包含4k条数据的训练集和包含0.5k条数据的验证集。训练集每行为一个json格式，“text_id”为样本编号，“text”为文本，“cause_effect_mention”为因果事件所在句，“cause_mention”为原因事件文本，“cause_actor”为原因事件施事要素，“cause_action”为原因事件动作，“cause_object”为原因事件受事，“cause_region”为原因事件涉及区域，“cause_industry”为原因事件涉及行业，“cause_organization”为原因事件涉及机构，“cause_product”为原因事件提及产品，effect结果事件诸如上包含effect_mention, effect_actor, effect_action, effect_object, effect_region, effect_industry, effect_organization,effect_product。其中，事件要素取值可能重复与嵌套，如cause_organization和effect_organization取值一致等。验证集只包含“text_id”，“text”，“cause_effect_mention”，“cause_mention”，“effect_mention”信息，不包含事件要素。
+
+
+因果事件要素抽取
+
+该任务目标是继因果抽取后，从因果事件所在篇章抽取原因事件要素和结果事件要素。即给定文本TT，及其包含的原因事件CC和结果事件EE，分别抽取CC和EE中的事件要素，如下：
+
+输入：一段文本，其包含的原因事件CC和结果事件EE。
+输出：原因事件和结果事件的事件要素。
+示例：
+样例一：
+输入：
+
+    {“text_id”:”123456”, ”text”: “恒大地产2012年拟裁员30%：1月4日，恒大地产（3333.HK）的一位副总裁向记者确认，公司内部发文，2012年将裁员30%。知情人士透露，按步骤初期只裁10%，因为2009年裁员的时候，矛盾冲突比较激烈。该副总称裁员的原因主要是项目销售问题。”, “cause_effect_mention”:”裁员的原因主要是项目销售问题”, “cause_effect_list”: [{“id”:”123456_0”, “cause_mention”:”项目销售问题”,”effect_mention”:”裁员”}]}
+
+输出：
+
+    {“text_id”:”123456”,” cause_effect_list”:[{“id”:”123456_0”, “cause_mention”:”项目销售问题”, ”cause_actor”:[”项目”], “cause_action”:”销售问题”, “cause_object”:[””], “cause_region”:[],”cause_industry”:[”地产”], “cause_organization”:[“恒大地产”], “cause_product”:[], “effect_mention”:[“裁员”], ”effect_actor”:[“恒大地产”], “effect_action”:[“裁员”], “effect_object”:””, “effect_region”:[], ”effect_industry”:[“地产”], “effect_organization”:[“恒大地产”], “effect_product”:[]}]}
+
+样例二：
+输入：
+
+    {“text_id”:”123457”, “text”: “雷诺拟在华统一延质保周期：雷诺中国执行总裁陈国章近日在接受记者采访时表示，雷诺正在考虑统一延长质保周期，但延保会导致车价上升，具体的定价策略正在商讨中。” ,  “cause_effect_mention”:” 延保会导致车价上升”, “cause_effect_list”: [{“id”:”123457_0”, “cause_mention”:” 延保”,”effect_mention”:”车价上升”}]}}
+
+输出：
+
+    {“text_id”:”123457”, cause_effect_list”:[{“id”:”123457_0”, “cause_mention”:” 延保”, ”cause_actor”:[“雷诺”], “cause_action”:” 延保”, “cause_object”:[””], “cause_region”:[],”cause_industry”:[], “cause_organization”:[“雷诺”], “cause_product”:[], “effect_mention”:“车价上升”, ”effect_actor”:[“车价”], “effect_action”:“上升”, “effect_object”:[””], “effect_region”:[], ”effect_industry”:[], “effect_organization”:[“雷诺”], “effect_product”:[“车”]}]}
+
+train_data.json中第3995条数据,将id为9390_0_1的cause_mention由"长期缺乏待售物业和买家激增"改为"长期缺乏待售物业"
+
+第3997条数据,将id为5546_3_1的effect_mention由"使得价格波动幅度更大"改为"价格波动幅度更大"
+
+第3998条数据,将id为5824_7_0的cause_mention由"化石能源短缺及气候雄心的持续"改为"化石能源短缺"
